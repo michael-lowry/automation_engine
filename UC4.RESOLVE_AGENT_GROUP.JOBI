@@ -1,0 +1,88 @@
+:PRINT "--- BEGIN UC4.RESOLVE_AGENT_GROUP.JOBI ---"
+:ON_ERROR RESUME
+:SET &AG_AGENT# = ""
+:SET &PreProc_Error# = "No error"
+:SET &Run_PostProc_on_Error# = &Run_PostProc_on_Error#
+:SET &Stop_on_Error# = &Stop_on_Error#
+:SET &Stop_Message_Num# = &Stop_Message_Num#
+:IF &Stop_Message_Num# = ""
+:  SET &Stop_Message_Num# = "0"
+:ENDIF
+:IF &AGENT_OR_AGENTGROUP# <> ""
+:  SWITCH GET_OBJECT_TYPE(&AGENT_OR_AGENTGROUP#)
+:  CASE 'HOSTG'
+:    PRINT "&AGENT_OR_AGENTGROUP# is an agent group. Resolving it..."
+:    SET &AG_HND# = PREP_PROCESS_AGENTGROUP(&AGENT_OR_AGENTGROUP#,,'BY_RULE')
+:    PROCESS &AG_HND#
+:      SET &AG_AGENT# = GET_PROCESS_LINE(&AG_HND#,1)
+:      SET &AGENT_UP# = GET_PROCESS_LINE(&AG_HND#,2)
+:      PRINT "Agent chosen by rule from agent group: &AG_AGENT#"
+:      IF &AGENT_UP# = 'Y'
+:        PRINT "Agent is up."
+:        SET &AGENT# = &AG_AGENT#
+:        TERM_PROCESS
+:      ELSE
+:        SET &Message# = "No active &AGENT_OR_AGENTGROUP# agent!"
+:        PRINT "ERROR: &Message#"
+:        SET &PreProc_Error# = "No active agent in agent group (1)"
+:      ENDIF
+:    ENDPROCESS
+:    CLOSE_PROCESS &AG_HND#
+!    Sometimes, PREP_PROCESS_AGENTGROUP returns an empty data sequence.
+:    IF &AG_AGENT# = " "
+:      SET &Message# = "No active &AGENT_OR_AGENTGROUP# agent!"
+:      PRINT "ERROR: &Message#"
+:      SET &PreProc_Error# = "No active agent in agent group (2)"
+:    ENDIF
+:  CASE 'HOST'
+:    PRINT "&AGENT_OR_AGENTGROUP# is an agent."
+:    SET &AGENT_UP# = SYS_HOST_ALIVE(&AGENT_OR_AGENTGROUP#)
+:    IF &AGENT_UP#  = "Y"
+:      PRINT "Agent is up."
+:      SET &AGENT# = &AGENT_OR_AGENTGROUP#
+:    ELSE
+:      SET &Message# = "Agent &AGENT_OR_AGENTGROUP# is down!"
+:      PRINT "ERROR: &Message#"
+:      SET &PreProc_Error# = "Agent is down."
+:    ENDIF
+:  OTHER
+:    PRINT "&AGENT_OR_AGENTGROUP# is not a known agent or agent group."
+:    SET &Message# = "&AGENT_OR_AGENTGROUP# unknown!"
+:    PRINT "ERROR: &Message#"
+:    SET &PreProc_Error# = "Unknonwn agent/agent group"
+:  ENDSWITCH
+:ELSE
+:  PRINT "No agent or agent group specified in variable &&AGENT_OR_AGENTGROUP#."
+:ENDIF
+
+! Check for agent/job type mismatch
+:IF &AGENT# <> ""
+:  PRINT "Object name    : &$NAME#"
+:  PRINT "Object type    : &$OBJECT_TYPE#"
+:  SET &OBJ_SUBTYPE# = GET_VAR(UC4.GET_OBJ_SUBTYPE.VARA_SEC_SQLI)
+:  PRINT "Object subtype : &OBJ_SUBTYPE#"
+:  SET &AGENT_TYPE# = GET_VAR(UC_HOST_JCL_VAR,&AGENT#)
+:  PRINT "Agent name     : &AGENT#"
+:  PRINT "Agent type     : &AGENT_TYPE#"
+:  IF &OBJ_SUBTYPE# <> &AGENT_TYPE#
+:    PRINT "Mismatch between job subtype and agent type."
+:    SET &Message# = "Cannot switch to agent of different type!"
+:    PRINT "ERROR: &Message#"
+:    SET &PreProc_Error# = "Job/agent type mismatch"
+:  ENDIF
+:ENDIF
+:RSET &PreProc_Error# = &PreProc_Error#
+
+! Begin error handling
+:IF &PreProc_Error# <> "No error"
+:  PRINT "Error encountered in pre-process."
+:  IF &Run_PostProc_on_Error# = "YES"
+:    PRINT "&&Run_PostProc_on_Error# = 'YES'. Running post-process."
+:    INC_SCRIPT(2)
+:  ENDIF
+:  IF &Stop_on_Error# = "YES"
+:    PRINT "&&Stop_on_Error# = 'YES'. Stopping task with message number &Stop_Message_Num#."
+:    STOP NOMSG,&Stop_Message_Num#
+:  ENDIF
+:ENDIF
+:PRINT "--- END UC4.RESOLVE_AGENT_GROUP.JOBI ---"
