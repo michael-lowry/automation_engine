@@ -1,4 +1,6 @@
-#### UC4.GET_OBJ_SUBTYPE.VARA_SEC_SQLI ####
+[UC4.GET_OBJ_SUBTYPE.VARA_SEC_SQLI](https://github.com/michael-lowry/automation_engine/blob/master/UC4.GET_OBJ_SUBTYPE.VARA_SEC_SQLI.xml) can be used to look up the subtype of the currently-executing task.
+
+#### SQL query ####
 ```sql
 select OH_HostAttrTypeDst
 from OH
