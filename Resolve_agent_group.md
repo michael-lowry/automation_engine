@@ -1,4 +1,4 @@
-This JOBI can be used to perform dynamic resolution of agent groups. It is useful in situations where one cannot determine ahead of time whether an agent or agent group will be used. 
+[UC4.RESOLVE_AGENT_GROUP.JOBI](https://github.com/michael-lowry/automation_engine/blob/master/UC4.RESOLVE_AGENT_GROUP.JOBI) (also available as [AE object XML](https://github.com/michael-lowry/automation_engine/blob/master/UC4.RESOLVE_AGENT_GROUP.JOBI.xml)) can be used to perform dynamic resolution of agent groups. It is useful in situations where one cannot determine ahead of time whether an agent or agent group will be used. 
 
 #### Overview ####
 1. Set the variable `&AGENT_OR_AGENTGROUP#` to the name of an agent or agent group.
