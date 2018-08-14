@@ -14,6 +14,7 @@ where OH_Name = ?
 #### Example ####
 ~~~~
 :PRINT "&AGENT_OR_AGENTGROUP# is an agent group. Checking AG mode..."
+:SET &AGENTGROUP# = &AGENT_OR_AGENTGROUP#
 :SET &AG_Mode# = GET_VAR(UC4.GET_AGENTGROUP_MODE.VARA_SEC_SQLI)
 :SWITCH &AG_Mode#
 :CASE 'A'
@@ -27,7 +28,7 @@ where OH_Name = ?
 :CASE 'X'
 :  SET &AG_Mode_Desc# = "all"
 :ENDSWITCH
-:PRINT "&AGENTGROUP# mode is '&AG_Mode_Desc#' (&AG_Mode#)."
+:PRINT "&AGENT_OR_AGENTGROUP# mode is '&AG_Mode_Desc#' (&AG_Mode#)."
 ~~~~
 
 #### Sample output ####
