@@ -36,7 +36,7 @@ where OH_Name = ?</command.ora>
 <resultformat/>
 <infobar>U04002751 Attention: There is a variable-replacement restriction in case of security limits (SQLVAR_SECURITY_LEVEL)!</infobar>
 <BindParams>
-<row Lnr="1" Value="&amp;AGENT_OR_AGENTGROUP#" id="1463021"/>
+<row Lnr="1" Value="&amp;AGENTGROUP#" id="1463021"/>
 </BindParams>
 </SQLI>
 </VARA>
