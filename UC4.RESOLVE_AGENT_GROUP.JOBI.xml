@@ -1,4 +1,14 @@
-:PRINT "--- BEGIN UC4.RESOLVE_AGENT_GROUP.JOBI ---"
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<uc-export clientvers="12.2.0+build.1594">
+<JOBI name="UC4.RESOLVE_AGENT_GROUP.JOBI">
+<HEADER state="1">
+<Title/>
+<ArchiveKey1/>
+<ArchiveKey2/>
+<OH_SubType/>
+</HEADER>
+<SCRIPT mode="1" state="1">
+<MSCRI><![CDATA[:PRINT "--- BEGIN UC4.RESOLVE_AGENT_GROUP.JOBI ---"
 :SET &AG_AGENT# = ""
 :SET &PreProc_Error# = "No error"
 :SET &Run_PostProc_on_Error# = &Run_PostProc_on_Error#
@@ -94,4 +104,10 @@
 :ENDIF
 :RSET &PreProc_Error# = &PreProc_Error#
 :PRINT "--- END UC4.RESOLVE_AGENT_GROUP.JOBI ---"
-:INCLUDE UC4.ERROR_HANDLING_PREPROC.JOBI
+:INCLUDE UC4.ERROR_HANDLING_PREPROC.JOBI]]></MSCRI>
+</SCRIPT>
+<DOCU_Docu state="1" type="text">
+<DOC/>
+</DOCU_Docu>
+</JOBI>
+</uc-export>
