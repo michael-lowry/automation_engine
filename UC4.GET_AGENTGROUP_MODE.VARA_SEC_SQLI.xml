@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<uc-export clientvers="12.2.0+build.1594">
+<VARA OVD_VRName="FREI" data_type="SQLI_SEC" name="UC4.GET_AGENTGROUP_MODE.VARA_SEC_SQLI" replacementmode="2">
+<HEADER state="1">
+<Title/>
+<ArchiveKey1/>
+<ArchiveKey2/>
+<OH_SubType>SQLI_SEC</OH_SubType>
+</HEADER>
+<ATTR_VARA state="1">
+<Type>C|Text</Type>
+<lblSource/>
+<source>SQLI_SEC</source>
+<VRName>FREI|Freely selected</VRName>
+<NotFoundErr>0</NotFoundErr>
+<NotFoundDef>1</NotFoundDef>
+<ShareN>0</ShareN>
+<ShareL>0</ShareL>
+<ShareR>0</ShareR>
+<MaxValue_C>1024</MaxValue_C>
+<CheckMax_C>0</CheckMax_C>
+<uppercase>0</uppercase>
+<sortColumn>0</sortColumn>
+<sortDirection>0</sortDirection>
+<HostType/>
+</ATTR_VARA>
+<VARA state="1">
+<SQLI internal="YES">
+<command.sql/>
+<command.ora>select OHG_Mode
+from OH left join OHG
+on OH_Idnr = OHG_OH_Idnr
+where OH_Name = ?</command.ora>
+<command.db2/>
+<command.postgres/>
+<resultformat/>
+<infobar>U04002751 Attention: There is a variable-replacement restriction in case of security limits (SQLVAR_SECURITY_LEVEL)!</infobar>
+<BindParams>
+<row Lnr="1" Value="&amp;AGENT_OR_AGENTGROUP#" id="1463021"/>
+</BindParams>
+</SQLI>
+</VARA>
+<DOCU_Docu state="1" type="text">
+<DOC><![CDATA[See https://docs.automic.com/documentation/webhelp/english/ALL/components/AE/12.2/DB%20Schema/db/_structure/HTML/OHG.html]]></DOC>
+</DOCU_Docu>
+</VARA>
+</uc-export>
