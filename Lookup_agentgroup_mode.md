@@ -27,6 +27,7 @@ where OH_Name = ?
 :CASE 'X'
 :  SET &AG_Mode_Desc# = "all"
 :ENDSWITCH
+:PRINT "&AGENT_OR_AGENTGROUP# mode is '&AG_Mode_Desc#' (&AG_Mode#)."
 ~~~~
 
 #### Sample output ####
