@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<uc-export clientvers="12.2.0+build.1594">
+<JOBI name="UC4.ERROR_HANDLING_PREPROC.JOBI">
+<HEADER state="1">
+<Title>Common error handling JOBI a data for job pre-process.</Title>
+<ArchiveKey1/>
+<ArchiveKey2/>
+<OH_SubType/>
+</HEADER>
+<SCRIPT mode="1" state="1">
+<MSCRI><![CDATA[:PRINT "--- BEGIN UC4.ERROR_HANDLING_PREPROC.JOBI ---"
+! Begin error handling
+:IF &PreProc_Error# <> "No error"
+:  PRINT "Error encountered in pre-process."
+:  IF &Run_PostProc_on_Error# = "YES"
+:    PRINT "&&Run_PostProc_on_Error# = 'YES'. Running post-process."
+:    INC_SCRIPT(2)
+:  ENDIF
+:  IF &Stop_on_Error# = "YES"
+:    PRINT "&&Stop_on_Error# = 'YES'. Stopping task with message number &Stop_Message_Num#."
+:    STOP NOMSG,&Stop_Message_Num#
+:  ENDIF
+:ENDIF
+:PRINT "--- END UC4.ERROR_HANDLING_PREPROC.JOBI ---"]]></MSCRI>
+</SCRIPT>
+<DOCU_Docu state="1" type="text">
+<DOC/>
+</DOCU_Docu>
+</JOBI>
+</uc-export>
