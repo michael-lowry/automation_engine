@@ -1,5 +1,4 @@
 :PRINT "--- BEGIN UC4.RESOLVE_AGENT_GROUP.JOBI ---"
-:ON_ERROR RESUME
 :SET &AG_AGENT# = ""
 :SET &PreProc_Error# = "No error"
 :SET &Run_PostProc_on_Error# = &Run_PostProc_on_Error#
@@ -9,18 +8,41 @@
 :  SET &Stop_Message_Num# = "0"
 :ENDIF
 :IF &AGENT_OR_AGENTGROUP# <> ""
+:  IF GET_OH_IDNR(&AGENT_OR_AGENTGROUP#) = 0
+:    SET &Message# = "Agent/agent group &AGENT_OR_AGENTGROUP# does not exist."
+:    PRINT "ERROR: &Message#"
+:    SET &PreProc_Error# = "Agent/group does not exist"
+:  ENDIF
 :  SWITCH GET_OBJECT_TYPE(&AGENT_OR_AGENTGROUP#)
 :  CASE 'HOSTG'
-:    PRINT "&AGENT_OR_AGENTGROUP# is an agent group. Resolving it..."
+:    PRINT "&AGENT_OR_AGENTGROUP# is an agent group. Checking AG mode..."
+:    SET &AG_Mode# = GET_VAR(UC4.GET_AGENTGROUP_MODE.VARA_SEC_SQLI)
+:    SWITCH &AG_Mode#
+:    CASE 'A'
+:      SET &AG_Mode_Desc# = "any"
+:    CASE 'F'
+:      SET &AG_Mode_Desc# = "first"
+:    CASE 'N'
+:      SET &AG_Mode_Desc# = "next"
+:    CASE 'L'
+:      SET &AG_Mode_Desc# = "load dependent"
+:    CASE 'X'
+:      SET &AG_Mode_Desc# = "all"
+:    ENDSWITCH
+:    PRINT "&AGENT_OR_AGENTGROUP# mode is '&AG_Mode_Desc#' (&AG_Mode#)."
+:    IF &AG_Mode# = 'X'
+:      PRINT "WARNING: Agent group will be resolved to a single specific agent."
+:    ENDIF
+:    PRINT "Checking agent group members..."
 :    SET &AG_HND# = PREP_PROCESS_AGENTGROUP(&AGENT_OR_AGENTGROUP#,,'BY_RULE')
 :    PROCESS &AG_HND#
 :      SET &AG_AGENT# = GET_PROCESS_LINE(&AG_HND#,1)
 :      SET &AGENT_UP# = GET_PROCESS_LINE(&AG_HND#,2)
 :      PRINT "Agent chosen by rule from agent group: &AG_AGENT#"
 :      IF &AGENT_UP# = 'Y'
-:        PRINT "Agent is up."
+:        PRINT "Agent &AG_AGENT# is up."
 :        SET &AGENT# = &AG_AGENT#
-:        TERM_PROCESS
+!:        TERM_PROCESS
 :      ELSE
 :        SET &Message# = "No active &AGENT_OR_AGENTGROUP# agent!"
 :        PRINT "ERROR: &Message#"
@@ -54,8 +76,6 @@
 :ELSE
 :  PRINT "No agent or agent group specified in variable &&AGENT_OR_AGENTGROUP#."
 :ENDIF
-
-! Check for agent/job type mismatch
 :IF &AGENT# <> ""
 :  PRINT "Object name    : &$NAME#"
 :  PRINT "Object type    : &$OBJECT_TYPE#"
@@ -72,17 +92,5 @@
 :  ENDIF
 :ENDIF
 :RSET &PreProc_Error# = &PreProc_Error#
-
-! Begin error handling
-:IF &PreProc_Error# <> "No error"
-:  PRINT "Error encountered in pre-process."
-:  IF &Run_PostProc_on_Error# = "YES"
-:    PRINT "&&Run_PostProc_on_Error# = 'YES'. Running post-process."
-:    INC_SCRIPT(2)
-:  ENDIF
-:  IF &Stop_on_Error# = "YES"
-:    PRINT "&&Stop_on_Error# = 'YES'. Stopping task with message number &Stop_Message_Num#."
-:    STOP NOMSG,&Stop_Message_Num#
-:  ENDIF
-:ENDIF
 :PRINT "--- END UC4.RESOLVE_AGENT_GROUP.JOBI ---"
+:INCLUDE UC4.ERROR_HANDLING_PREPROC.JOBI
